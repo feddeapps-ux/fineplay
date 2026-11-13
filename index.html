@@ -2349,7 +2349,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
   function montarBotonGoogle(cont) {
     if (!cont) return;
     if (AND && AND.loginGoogle) { cont.innerHTML = '<button class="btn-google" data-a="google-android">' + G_SVG + 'Continuar con Google</button>'; return; }
-    var cid = S.cfg.GOOGLE_CLIENT_ID_WEB;
+    var cid = S.cfg.GOOGLE_CLIENT_ID_WEB || '320792925133-79bah8pk841ckresuquvjud98r1aetb2.apps.googleusercontent.com';
     if (!cid) { cont.innerHTML = '<button class="btn-google" data-a="google-pronto">' + G_SVG + 'Continuar con Google</button>'; return; }
     cargarScript('https://accounts.google.com/gsi/client').then(function () {
       google.accounts.id.initialize({ client_id: cid, callback: function (r) { window.fpGoogleToken(r.credential); }, ux_mode: 'popup', auto_select: false });

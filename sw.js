@@ -1,5 +1,5 @@
 /* Fineplay PWA — abre sin internet. Cambia la versión al subir cambios. */
-const VERSION = 'fineplay-v2';
+const VERSION = 'fineplay-v3';
 const BASE = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './privacidad.html'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(n => n !== VERSION).map(n => caches.delete(n)))).then(() => self.clients.claim())); });
