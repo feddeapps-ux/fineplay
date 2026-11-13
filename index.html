@@ -353,13 +353,18 @@ body.con-hoja .toast{bottom:auto;top:18px}
       cargador: function (p, ok, mal) { if (window.fpCargarLed) window.fpCargarLed(p, ok, mal); else mal(); }
     };
   </script>
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Fineplay">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <meta name="description" content="Fineplay — Tu música, reinventada. Reproductor de música con tus listas y carátulas.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
   #fpInstalar{position:sticky;top:0;z-index:9000;display:none;align-items:center;gap:10px;padding:9px 14px;background:linear-gradient(90deg,#3E0E1E,#6E1230);border-bottom:1px solid rgba(192,124,251,.3);font-family:'Outfit',system-ui,sans-serif;color:#F7EEF2}
   #fpInstalar.ver{display:flex}
+  @media (display-mode: standalone){#fpInstalar{display:none!important}}
   #fpInstalar img{width:34px;height:34px;border-radius:9px}
   #fpInstalar .tx{flex:1;min-width:0;font-size:13px;line-height:1.25}
   #fpInstalar .tx b{display:block;font-size:14.5px}
@@ -3052,17 +3057,25 @@ body.con-hoja .toast{bottom:auto;top:18px}
 <script>
 /* ===== PWA: instalar Fineplay + funcionar sin internet ===== */
 (function () {
-  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { }); });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function (e) { console.warn('sw', e); });
   var barra = document.getElementById('fpInstalar'), btn = document.getElementById('fpInstalarBtn'), aviso = null;
-  var instalada = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  function mostrar() { if (!instalada && sessionStorage.getItem('fpNoInstalar') !== '1') barra.classList.add('ver'); }
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); aviso = e; mostrar(); });
-  if (ios && !instalada) { mostrar(); }
+  var instalada = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true;
+  var ua = navigator.userAgent, ios = /iphone|ipad|ipod/i.test(ua);
+  var dentroDeApp = /FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)/i.test(ua);   // navegador interno de WhatsApp/Facebook: ahí no se puede instalar
+  // La barra se muestra SIEMPRE en el navegador (no solo cuando Chrome avisa); instalada, desaparece
+  if (!instalada && sessionStorage.getItem('fpNoInstalar') !== '1') barra.classList.add('ver');
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); aviso = e; btn.textContent = 'Instalar'; });
   btn.onclick = function () {
-    if (aviso) { aviso.prompt(); aviso.userChoice.then(function (r) { if (r.outcome === 'accepted') barra.classList.remove('ver'); aviso = null; }); }
-    else if (ios) alert('En iPhone: toca Compartir (cuadro con flecha) y luego "Agregar a pantalla de inicio".');
-    else alert('Abre el menú ⋮ del navegador y elige "Instalar aplicación".');
+    if (aviso) {
+      aviso.prompt();
+      aviso.userChoice.then(function (r) { if (r.outcome === 'accepted') barra.classList.remove('ver'); aviso = null; });
+      return;
+    }
+    var m;
+    if (dentroDeApp) m = 'Estás dentro de otra app (WhatsApp/Facebook). Toca ⋮ y elige "Abrir en Chrome"; ahí aparece Instalar.';
+    else if (ios) m = 'En iPhone: abre esta página en Safari, toca Compartir (cuadro con flecha ↑) y elige "Agregar a pantalla de inicio".';
+    else m = 'Toca el menú ⋮ de Chrome (arriba a la derecha) y elige "Instalar aplicación" o "Agregar a la pantalla principal".';
+    alert(m);
   };
   document.getElementById('fpInstalarX').onclick = function () { barra.classList.remove('ver'); sessionStorage.setItem('fpNoInstalar', '1'); };
   window.addEventListener('appinstalled', function () { barra.classList.remove('ver'); });
