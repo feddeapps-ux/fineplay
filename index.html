@@ -2352,7 +2352,8 @@ body.con-hoja .toast{bottom:auto;top:18px}
     var cid = S.cfg.GOOGLE_CLIENT_ID_WEB || '320792925133-79bah8pk841ckresuquvjud98r1aetb2.apps.googleusercontent.com';
     if (!cid) { cont.innerHTML = '<button class="btn-google" data-a="google-pronto">' + G_SVG + 'Continuar con Google</button>'; return; }
     cargarScript('https://accounts.google.com/gsi/client').then(function () {
-      google.accounts.id.initialize({ client_id: cid, callback: function (r) { window.fpGoogleToken(r.credential); }, ux_mode: 'popup', auto_select: false });
+      google.accounts.id.initialize({ client_id: cid, callback: function (r) { window.fpGoogleToken(r.credential); }, ux_mode: 'popup', auto_select: false,
+        use_fedcm_for_button: true, use_fedcm_for_prompt: true, button_auto_select: false, context: 'signin', itp_support: true });   // FedCM: la elección de cuenta se abre DENTRO de la app (hoja nativa de Chrome), sin ir a otra página
       google.accounts.id.renderButton(cont, { theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'es', width: Math.min(360, cont.clientWidth || 320) });
     }).catch(function () { cont.innerHTML = '<div class="mini centro">No se pudo cargar el botón de Google.</div>'; });
   }
