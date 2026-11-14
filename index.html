@@ -9,6 +9,11 @@
   <meta name="fp-api" content="https://script.google.com/macros/s/AKfycbw5qT9I0mlAhF9Rq3Z-NVLWNXjdbBEUluoF8Myeue34csoiyxEC5F6aVOoENU14xF39/exec">
   <title>Fineplay</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <link rel="dns-prefetch" href="https://i.imgur.com">
+  <link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@700&family=VT323&display=swap" rel="stylesheet">
   <style>
 /* =====================================================================
@@ -328,7 +333,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
 .adm-stat{background:var(--panel);border:1px solid var(--linea);border-radius:14px;padding:10px;text-align:center}
 .adm-stat b{display:block;font-size:22px;color:var(--lila-claro)}
 .adm-stat span{font-size:11.5px;color:var(--gris)}
-.adm-item{background:var(--panel);border:1px solid var(--linea);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.adm-item{background:var(--panel);border:1px solid var(--linea);border-radius:14px;padding:12px 14px;margin-bottom:10px;content-visibility:auto;contain-intrinsic-size:auto 150px}
 .adm-item .cab{display:flex;align-items:center;gap:10px}
 .adm-item .cab .txt{flex:1;min-width:0}
 .adm-item .cab b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1008,6 +1013,16 @@ body.con-hoja .toast{bottom:auto;top:18px}
     cargar: cargar,
     alerta: alerta,
     pagina: function () { return pagina; },
+    // Fineplay: lista de imágenes/videos que usa un contenido de la LED (para guardarlos en el teléfono)
+    urlsDe: function (raw) {
+      var ex = extraerLogo(raw), l = [];
+      if (ex.logoUrl) l.push(driveDirecto(ex.logoUrl));
+      String(ex.resto || "").split(/[\n,]+/).map(function (x) { return x.trim(); }).filter(Boolean).forEach(function (tk) {
+        var u = driveDirecto(parseToken(tk).url);
+        if (tipoDe(u)) l.push(u);
+      });
+      return l;
+    },
     // expuestos para pruebas
     _parseToken: parseToken,
     _parseDuracion: parseDuracion,
@@ -1357,6 +1372,34 @@ body.con-hoja .toast{bottom:auto;top:18px}
     });
   }
   window.fpCargarLed = function (pagina, ok, mal) { api('getLedData', pagina).then(ok).catch(mal); };
+
+  /* Publicidad LED sin internet: trae TODAS las pantallas de una vez, las guarda en el teléfono
+   * (mismo formato que usa la LED) y pide guardar sus imágenes y videos en la carpeta local. */
+  var ledPre = { ultima: 0, corriendo: false };
+  function ledPrecargarTodo(forzar) {
+    if (ledPre.corriendo || !enLinea() || !window.DVLed || !DVLed.urlsDe) return;
+    if (!forzar && Date.now() - ledPre.ultima < 10 * 60 * 1000) return;
+    ledPre.corriendo = true;
+    api('getLedTodas').then(function (r) {
+      ledPre.ultima = Date.now();
+      var urls = [], pags = r.paginas || {};
+      Object.keys(pags).forEach(function (p) {
+        var d = pags[p]; if (!d || !d.texto) return;
+        try {
+          var k = 'FP_LED_V1_' + p, viejo = JSON.parse(localStorage.getItem(k) || 'null');
+          if (!viejo || viejo.signature !== d.signature) localStorage.setItem(k, JSON.stringify({ texto: String(d.texto), signature: String(d.signature || ''), ts: Date.now() }));
+        } catch (e) { }
+        try { urls = urls.concat(DVLed.urlsDe(d.texto)); } catch (e) { }
+      });
+      urls = urls.filter(function (u, i) { return /^https?:\/\//i.test(u) && urls.indexOf(u) === i; });
+      if (AND && AND.ledPrecargar) AND.ledPrecargar(JSON.stringify(urls));
+      else if (navigator.serviceWorker && navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({ tipo: 'fp-led-precargar', urls: urls });
+    }).catch(function () { }).then(function () { ledPre.corriendo = false; });
+  }
+  // Sin apuro: espera a que la app termine de abrir para no competir con lo importante
+  function cuandoLibre(fn, ms) {
+    setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 4000 }); else fn(); }, ms || 0);
+  }
 
   /* =================================================================
    *  ESTADO
@@ -2269,7 +2312,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
     var u = S.usuario;
     if (!u) return '<div class="fp-avatar sin ' + (cls || '') + '">' + ic('cuenta') + '</div>';
     var url = fotoUsuario();
-    return '<div class="fp-avatar ' + (cls || '') + '">' + esc(inicial(u.nombre)) + (url ? '<img alt="" src="' + esc(url) + '" onerror="this.remove()" style="position:absolute;inset:0">' : '') + '</div>';
+    return '<div class="fp-avatar ' + (cls || '') + '">' + esc(inicial(u.nombre)) + (url ? '<img alt="" decoding="async" referrerpolicy="no-referrer" src="' + esc(url) + '" onerror="this.remove()" style="position:absolute;inset:0">' : '') + '</div>';
   }
   function fotoUsuario() {
     var u = S.usuario; if (!u) return '';
@@ -2282,7 +2325,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
     if (!u) { b.className = 'fp-avatar sin'; b.innerHTML = ic('cuenta'); return; }
     var url = fotoUsuario();
     b.className = 'fp-avatar';
-    b.innerHTML = esc(inicial(u.nombre)) + (url ? '<img alt="" src="' + esc(url) + '" onerror="this.remove()" style="position:absolute;inset:0">' : '') +
+    b.innerHTML = esc(inicial(u.nombre)) + (url ? '<img alt="" decoding="async" referrerpolicy="no-referrer" src="' + esc(url) + '" onerror="this.remove()" style="position:absolute;inset:0">' : '') +
       (!u.verificado && u.exigeVerificacion !== false ? '<span class="punto"></span>' : '');
   }
   function vCuenta() {
@@ -2415,6 +2458,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
       api('api_cerrarSesion', S.token).catch(function () { });
       try { if (AND && AND.cerrarSesionGoogle) AND.cerrarSesionGoogle(); } catch (e) { }
       try { if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect(); } catch (e) { }
+      clearTimeout(guardarDiferido.admin_cache); try { Bodega.guardar('admin_cache', null); } catch (e) { }
       S.token = ''; S.usuario = null; S.esAdmin = false; S.admin = null;
       Bodega.borrar('sesion'); cargarBibLocal(); pintarAvatar(); ir('inicio', {}, true); toast('Sesión cerrada');
     });
@@ -2677,9 +2721,13 @@ body.con-hoja .toast{bottom:auto;top:18px}
    *  PANEL DE ADMINISTRADOR
    * ================================================================= */
   function cargarAdmin(silencioso) {
-    if (!S.esAdmin || !enLinea()) return Promise.resolve();
+    if (!S.esAdmin) return Promise.resolve();
+    // Copia guardada en el teléfono: el panel aparece al instante (y sin internet)
+    if (!S.admin) { var cA = Bodega.leer('admin_cache'); if (cA && cA.usuarios) { S.admin = cA; S.adminViejo = true; } }
+    if (!enLinea()) { if (S.vista === 'admin' && S.admin) pintar(); return Promise.resolve(); }
     return api('api_adminDatos', S.token).then(function (r) {
-      S.admin = r; S.adminPulso = r.pulso;
+      S.admin = r; S.adminPulso = r.pulso; S.adminViejo = false;
+      guardarLuego('admin_cache', function () { return r; }, 1500);
       var b = $('fpBadgeAdmin'); if (b) b.textContent = r.verifs.length ? r.verifs.length + ' por verificar' : '';
       if (S.vista === 'admin') { var y = window.scrollY; pintar(); window.scrollTo(0, y); }
     }).catch(function (e) { if (!silencioso) toast(e.message, true); });
@@ -2691,7 +2739,9 @@ body.con-hoja .toast{bottom:auto;top:18px}
   function vAdmin() {
     var a = S.admin;
     var h = volverHTML() + '<div class="titulo">Panel de administrador</div>';
-    if (!a) { $('vista').innerHTML = h + '<div class="vacio"><span class="cargando"></span><br><br>Cargando panel…</div>'; cargarAdmin(); return; }
+    if (!a) { cargarAdmin(); a = S.admin; }
+    if (!a) { $('vista').innerHTML = h + '<div class="vacio"><span class="cargando"></span><br><br>Cargando panel…</div>'; return; }
+    if (S.adminViejo) h += '<div class="mini" style="margin:-4px 0 8px"><span class="cargando" style="width:12px;height:12px;vertical-align:-2px"></span> ' + (enLinea() ? 'Actualizando…' : 'Sin internet: mostrando los últimos datos guardados') + '</div>';
     h += '<div class="adm-stats"><div class="adm-stat"><b>' + a.stats.usuarios + '</b><span>Usuarios</span></div><div class="adm-stat"><b>' + a.stats.verificados + '</b><span>Verificados</span></div><div class="adm-stat"><b>' + a.stats.pendientes + '</b><span>Por verificar</span></div></div>';
     h += '<div class="tabs-scroll">' + [['verifs', 'Verificaciones' + (a.verifs.length ? ' (' + a.verifs.length + ')' : '')], ['usuarios', 'Usuarios'], ['led', 'Pantallas LED'], ['ajustes', 'Ajustes'], ['admins', 'Administradores']].map(function (t) {
       return '<button class="chip' + (S.adminTab === t[0] ? ' on' : '') + '" data-a="adm-tab" data-t="' + t[0] + '">' + t[1] + '</button>';
@@ -2724,34 +2774,52 @@ body.con-hoja .toast{bottom:auto;top:18px}
         campoAdm('GOOGLE_CLIENT_ID_WEB', 'ID de cliente OAuth WEB (botón de Google en el navegador)', c) +
         '<button class="btn btn-lila" data-a="adm-guardar-cfg">Guardar ajustes</button></div>';
     } else if (t === 'admins') {
-      h += '<div class="card"><div class="mini" style="margin-bottom:6px">Los administradores ingresan con su botón de Google.</div>' + a.admins.map(function (x, i) {
-        return '<div class="interruptor"><div style="min-width:0"><b style="overflow:hidden;text-overflow:ellipsis">' + esc(x.email) + '</b><small>' + esc(x.nombre) + '</small></div>' +
-          (i === 0 ? '<span class="estado lila">PRINCIPAL</span>' : '<button class="btn-ico" data-a="adm-quitar-admin" data-i="' + i + '" aria-label="Quitar">' + ic('basura') + '</button>') + '</div>';
-      }).join('') + '<label class="campo"><span>Agregar administrador (correo de Google)</span><input id="admNuevo" type="email" placeholder="correo@gmail.com"></label>' +
-        '<button class="btn btn-lila" data-a="adm-agregar-admin">Agregar</button></div>';
+      var yoA = String((S.usuario && S.usuario.email) || '').toLowerCase();
+      h += '<div class="card"><div class="mini" style="margin-bottom:6px">Los administradores ingresan con su botón de Google. Puedes quitar solo a los que tú agregaste.</div>' + a.admins.map(function (x) {
+        var esYo = String(x.email).toLowerCase() === yoA;
+        var etiqueta = (x.principal || (x.email && String(x.email).toLowerCase() === 'feddeapps@gmail.com')) ? '<span class="estado lila">PRINCIPAL</span>'
+          : x.puedoQuitar ? '<button class="btn btn-peligro btn-chico" data-a="adm-quitar-admin" data-e="' + esc(x.email) + '">Quitar</button>'
+            : esYo ? '<span class="estado ok">TÚ</span>' : '';
+        return '<div class="interruptor adm-item"><div style="min-width:0"><b style="overflow:hidden;text-overflow:ellipsis;display:block">' + esc(x.email) + '</b><small>' + esc(x.nombre || '') +
+          (x.agregadoPor ? ' · agregado por ' + esc(x.agregadoPor) : '') + '</small></div>' + etiqueta + '</div>';
+      }).join('') + '<label class="campo"><span>Correo de Google del nuevo administrador</span><input id="admNuevo" type="email" inputmode="email" autocomplete="off" placeholder="correo@gmail.com"></label>' +
+        '<label class="campo"><span>Nombre (opcional)</span><input id="admNuevoNom" type="text" maxlength="60" placeholder="Ej: Juan"></label>' +
+        '<button class="btn btn-lila" data-a="adm-agregar-admin">Agregar administrador</button></div>';
     }
     $('vista').innerHTML = h;
-    var q = $('admQ'); if (q) q.oninput = debounce(function () { S.admQ = q.value; $('admUsuarios').innerHTML = usuariosAdminHTML(); }, 200);
+    var q = $('admQ'); if (q) q.oninput = debounce(function () { S.admQ = q.value; S.admVer = 25; $('admUsuarios').innerHTML = usuariosAdminHTML(); }, 200);
     var sel = $('admLedPag'); if (sel) sel.onchange = function () { S.admLed = sel.value; pintar(); };
   }
   function campoAdm(k, etiqueta, c, tipo) {
     return '<label class="campo"><span>' + esc(etiqueta) + '</span><input data-cfg="' + k + '" type="' + (tipo === 'number' ? 'number' : 'text') + '"' + (tipo === 'tel' ? ' inputmode="tel"' : '') + ' value="' + esc(c[k] || '') + '"></label>';
   }
   function usuariosAdminHTML() {
-    var q = norm(S.admQ || ''), lista = S.admin.usuarios.filter(function (u) { return !q || norm(u.nombre + ' ' + u.email + ' ' + u.whatsapp).indexOf(q) !== -1; }).slice(0, 150);
+    var q = norm(S.admQ || ''), todos = S.admin.usuarios.filter(function (u) { return !q || norm(u.nombre + ' ' + u.email + ' ' + u.whatsapp).indexOf(q) !== -1; });
+    var ver = S.admVer || 25, lista = todos.slice(0, ver);
+    var yoU = String((S.usuario && S.usuario.email) || '').toLowerCase();
     return lista.map(function (u) {
-      return '<div class="adm-item"><div class="cab">' + (u.foto ? '<img src="' + esc(u.foto) + '" alt="" style="width:40px;height:40px;border-radius:50%;object-fit:cover" onerror="this.remove()">' : '<div class="fp-avatar" style="width:40px;height:40px;font-size:15px">' + esc(inicial(u.nombre)) + '</div>') +
+      var esPrincipal = String(u.email).toLowerCase() === 'feddeapps@gmail.com', esYo = String(u.email).toLowerCase() === yoU;
+      var adminBtn = (u.metodo === 'GOOGLE' && !esPrincipal && !esYo) ? (u.esAdmin
+        ? (puedoQuitarAdmin(u.email) ? '<button class="btn btn-borde btn-chico" data-a="adm-quitar-admin" data-e="' + esc(u.email) + '">Quitar admin</button>' : '')
+        : '<button class="btn btn-borde btn-chico" data-a="adm-hacer-admin" data-e="' + esc(u.email) + '" data-n="' + esc(u.nombre) + '">Hacer administrador</button>') : '';
+      return '<div class="adm-item"><div class="cab">' + (u.foto ? '<img src="' + esc(u.foto) + '" alt="" width="40" height="40" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="width:40px;height:40px;border-radius:50%;object-fit:cover" onerror="this.remove()">' : '<div class="fp-avatar" style="width:40px;height:40px;font-size:15px">' + esc(inicial(u.nombre)) + '</div>') +
         '<div class="txt"><b>' + esc(u.nombre) + '</b><div class="mini">' + esc(u.email) + (u.whatsapp ? ' · +' + esc(u.whatsapp) : '') + '</div></div></div>' +
         '<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">' + (u.verificado ? '<span class="estado ok">VERIFICADO</span>' : '<span class="estado alerta">SIN VERIFICAR</span>') +
         (u.estado === 'BLOQUEADO' ? '<span class="estado mal">BLOQUEADO</span>' : '') + '<span class="estado lila">' + esc(u.metodo) + '</span>' + (u.esAdmin ? '<span class="estado lila">ADMIN</span>' : '') + '</div>' +
         '<div class="mini" style="margin-top:6px">Registro: ' + esc(u.registro) + ' · Último acceso: ' + esc(u.acceso) + (u.motivo ? '<br>Motivo: ' + esc(u.motivo) : '') + '</div>' +
-        (u.esAdmin ? '' : '<div class="btns">' +
+        (u.esAdmin ? (adminBtn ? '<div class="btns">' + adminBtn + '</div>' : '') : '<div class="btns">' +
           (u.verificado ? '<button class="btn btn-borde btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="QUITAR_VERIFICACION">Quitar verificación</button>' : '<button class="btn btn-lila btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="VERIFICAR">Verificar</button>') +
           (u.estado === 'BLOQUEADO' ? '<button class="btn btn-borde btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="DESBLOQUEAR">Desbloquear</button>' : '<button class="btn btn-borde btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="BLOQUEAR">Bloquear</button>') +
           (u.planilla ? '<button class="btn btn-borde btn-chico" data-a="externo" data-url="' + esc(u.planilla) + '">Su planilla</button>' : '') +
-          '<button class="btn btn-peligro btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="ELIMINAR">Eliminar</button></div>') + '</div>';
-    }).join('') || '<div class="vacio">Sin usuarios</div>';
+          adminBtn + '<button class="btn btn-peligro btn-chico" data-a="adm-usuario" data-id="' + esc(u.id) + '" data-x="ELIMINAR">Eliminar</button></div>') + '</div>';
+    }).join('') + (todos.length > ver ? '<button class="btn btn-borde" style="width:100%;margin:6px 0 12px" data-a="adm-ver-mas">Ver más (' + (todos.length - ver) + ' restantes)</button>' : '') || '<div class="vacio">Sin usuarios</div>';
   }
+  function puedoQuitarAdmin(email) {
+    var e = String(email).toLowerCase(), x = (S.admin.admins || []).filter(function (a) { return String(a.email).toLowerCase() === e; })[0];
+    return !!(x && x.puedoQuitar);
+  }
+  // Tras una acción: la pantalla cambia al tiro y luego se confirma en silencio con el servidor
+  function admRefrescar() { var y = window.scrollY; if (S.vista === 'admin') { if (S.adminTab === 'usuarios' && $('admUsuarios')) $('admUsuarios').innerHTML = usuariosAdminHTML(); else pintar(); } window.scrollTo(0, y); cargarAdmin(true); }
 
   /* =================================================================
    *  ACCIONES (todos los toques pasan por aquí)
@@ -2932,7 +3000,17 @@ body.con-hoja .toast{bottom:auto;top:18px}
       conf.then(function (v) {
         if (v === false || v === null) return;
         ocupado(el, true);
-        api('api_adminUsuario', S.token, id, x, typeof v === 'string' ? v : '').then(function () { toast('Listo ✔'); cargarAdmin(); }).catch(function (e) { ocupado(el, false); toast(e.message, true); });
+        api('api_adminUsuario', S.token, id, x, typeof v === 'string' ? v : '').then(function () {
+          var l = S.admin.usuarios, u = l.filter(function (k) { return k.id === id; })[0];
+          if (u) {
+            if (x === 'ELIMINAR') { l.splice(l.indexOf(u), 1); S.admin.stats.usuarios--; }
+            else if (x === 'BLOQUEAR') { u.estado = 'BLOQUEADO'; u.motivo = typeof v === 'string' ? v : ''; }
+            else if (x === 'DESBLOQUEAR') { u.estado = 'ACTIVO'; u.motivo = ''; }
+            else if (x === 'VERIFICAR') u.verificado = true; else if (x === 'QUITAR_VERIFICACION') u.verificado = false;
+          }
+          toast(x === 'ELIMINAR' ? 'Cuenta eliminada ✔' : x === 'BLOQUEAR' ? 'Cuenta bloqueada 🔒' : x === 'DESBLOQUEAR' ? 'Cuenta desbloqueada ✔' : 'Listo ✔');
+          admRefrescar();
+        }).catch(function (e) { ocupado(el, false); toast(e.message, true); });
       });
     },
     'adm-led': function (el) {
@@ -2941,6 +3019,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
         ocupado(el, false); S.admin.led[pag] = txt; toast('Pantalla ' + pag + ' guardada ✔');
         try { localStorage.removeItem('FP_LED_V1_' + pag); localStorage.removeItem('FP_LED_V1_ADMIN'); } catch (e) { }
         if (window.DVLed) DVLed.cargar('ADMIN');
+        ledPre.ultima = 0; cuandoLibre(function () { ledPrecargarTodo(true); }, 1500);
       }).catch(function (e) { ocupado(el, false); toast(e.message, true); });
     },
     'adm-guardar-cfg': function (el) {
@@ -2950,16 +3029,40 @@ body.con-hoja .toast{bottom:auto;top:18px}
       api('api_adminGuardarConfig', S.token, c).then(function (r) { ocupado(el, false); S.cfg = r.cfg; Bodega.guardar('cfg', S.cfg); toast('Ajustes guardados ✔'); cargarAdmin(true); })
         .catch(function (e) { ocupado(el, false); toast(e.message, true); });
     },
-    'adm-agregar-admin': function () {
-      var e = $('admNuevo').value.trim().toLowerCase(); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return toast('Correo no válido', true);
-      var lista = S.admin.admins.slice(1).concat([{ email: e, nombre: 'Administrador', activo: true }]);
-      api('api_adminGuardarAdmins', S.token, lista).then(function () { toast('Administrador agregado'); cargarAdmin(); }).catch(function (er) { toast(er.message, true); });
+    'adm-ver-mas': function () { S.admVer = (S.admVer || 25) + 25; var y = window.scrollY; $('admUsuarios').innerHTML = usuariosAdminHTML(); window.scrollTo(0, y); },
+    'adm-agregar-admin': function (el) {
+      var e = $('admNuevo').value.trim().toLowerCase(), n = ($('admNuevoNom') || {}).value || '';
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return toast('Correo no válido', true);
+      agregarAdmin(el, e, n);
+    },
+    'adm-hacer-admin': function (el) {
+      var e = el.dataset.e, n = el.dataset.n;
+      dialogo({ icono: '🛡️', titulo: '¿Hacer administrador?', texto: e + ' podrá entrar a este panel (con su botón de Google), verificar, bloquear y eliminar usuarios.', ok: 'Hacer administrador' })
+        .then(function (v) { if (v !== false && v !== null) agregarAdmin(el, e, n); });
     },
     'adm-quitar-admin': function (el) {
-      var i = Number(el.dataset.i), lista = S.admin.admins.slice(1).filter(function (x, k) { return k !== i - 1; });
-      api('api_adminGuardarAdmins', S.token, lista).then(function () { toast('Administrador quitado'); cargarAdmin(); }).catch(function (er) { toast(er.message, true); });
+      var e = el.dataset.e;
+      dialogo({ icono: '🛡️', titulo: '¿Quitar administrador?', texto: e + ' dejará de ser administrador y se cerrará su sesión.', ok: 'Quitar', peligro: true }).then(function (v) {
+        if (v === false || v === null) return;
+        ocupado(el, true);
+        api('api_adminQuitarAdmin', S.token, e).then(function () {
+          var k = e.toLowerCase();
+          S.admin.admins = S.admin.admins.filter(function (a) { return String(a.email).toLowerCase() !== k; });
+          S.admin.usuarios.forEach(function (u) { if (String(u.email).toLowerCase() === k) u.esAdmin = false; });
+          toast('Administrador quitado ✔'); admRefrescar();
+        }).catch(function (er) { ocupado(el, false); toast(er.message, true); });
+      });
     }
   };
+  function agregarAdmin(el, e, n) {
+    ocupado(el, true);
+    api('api_adminAgregarAdmin', S.token, e, n).then(function () {
+      var k = e.toLowerCase();
+      S.admin.admins.push({ email: e, nombre: n || 'Administrador', activo: true, agregadoPor: (S.usuario && S.usuario.email) || '', puedoQuitar: true });
+      S.admin.usuarios.forEach(function (u) { if (String(u.email).toLowerCase() === k) { u.esAdmin = true; u.verificado = true; } });
+      toast('Administrador agregado ✔'); admRefrescar();
+    }).catch(function (er) { ocupado(el, false); toast(er.message, true); });
+  }
   function moverEnLista(i, d) {
     var l = listaPorId(S.params.k); if (!l) return;
     var j = i + d; if (j < 0 || j >= l.pistas.length) return;
@@ -2994,7 +3097,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
   function estadoRed() { document.body.classList.toggle('sin-red', !enLinea()); }
   window.addEventListener('online', function () { estadoRed(); programarSync(1000); refrescarInicio(); });
   window.addEventListener('offline', estadoRed);
-  window.fpRed = function (hay) { estadoRed(); if (hay) { programarSync(1000); refrescarInicio(); } };
+  window.fpRed = function (hay) { estadoRed(); if (hay) { programarSync(1000); refrescarInicio(); cuandoLibre(function () { ledPrecargarTodo(true); }, 5000); } };
   /** La app Android bajó una versión nueva de la interfaz */
   window.fpUiNueva = function () {
     toast('Hay una mejora de Fineplay lista', false, { texto: 'Actualizar', fn: function () { guardarColaYRecargar(); } });
@@ -3045,6 +3148,7 @@ body.con-hoja .toast{bottom:auto;top:18px}
     ir('inicio', {}, true);
     quitarSplash();
     refrescarInicio();
+    cuandoLibre(function () { ledPrecargarTodo(); }, 6000);
   }
   try { arrancar(); } catch (e) {
     console.error(e);
