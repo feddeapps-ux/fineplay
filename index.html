@@ -509,7 +509,6 @@ html[data-tema="neon"] .fp-nav button.on svg{filter:drop-shadow(0 0 6px rgba(157
 /* títulos */
 html[data-tema="neon"] .titulo{color:#9dffdc;text-shadow:0 0 16px rgba(157,255,220,.4)}
 html[data-tema="neon"] .subtitulo a,html[data-tema="neon"] .subtitulo button{color:#22e3d0}
-html[data-tema="neon"] .fp-temas-cab b{color:#bced1c;text-shadow:0 0 10px rgba(188,237,28,.6)}
 /* tarjetas y cajas con borde degradado violeta → magenta */
 html[data-tema="neon"] .card,html[data-tema="neon"] .dlg,html[data-tema="neon"] .adm-item,html[data-tema="neon"] .adm-stat{
   background:linear-gradient(#111129,#0a0a1e) padding-box,var(--gn-grad) border-box;border:2px solid transparent;box-shadow:0 0 20px rgba(168,85,247,.2),0 10px 26px rgba(0,0,0,.45)}
@@ -543,27 +542,71 @@ html[data-tema="neon"] .fp-rango::-webkit-slider-thumb{background:#bced1c;box-sh
 html[data-tema="neon"] .fp-rango::-moz-range-progress{background:#bced1c}
 html[data-tema="neon"] .fp-fila .t.on,html[data-tema="neon"] .fp-fila.on .t{color:#9dffdc;text-shadow:0 0 8px rgba(157,255,220,.5)}
 html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid rgba(168,85,247,.5);box-shadow:0 0 18px rgba(168,85,247,.35)}
-.fp-tema[data-t="neon"]{background:conic-gradient(#22e3d0,#4b6bff,#a855f7,#ff2d95,#bced1c,#22e3d0);box-shadow:0 0 10px rgba(168,85,247,.55)}
-/* ---------- Selector de diseño (círculos en Inicio) ---------- */
-.fp-temas-cab{display:flex;align-items:baseline;gap:6px;margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--gris);text-transform:uppercase}
-.fp-temas-cab b{letter-spacing:.3px;text-transform:none;font-size:12.5px;color:var(--lila)}
-.fp-temas{display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0 0 16px;padding:3px 2px 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.fp-temas::-webkit-scrollbar{display:none}
-.fp-tema{flex:none;position:relative;width:28px;height:28px;border-radius:50%;border:2px solid rgba(var(--crema-rgb),.16);background-size:cover;background-position:center;transition:transform .15s}
-.fp-tema:active{transform:scale(.9)}
-.fp-tema.si{border-color:var(--lila);box-shadow:0 0 0 3px rgba(var(--lila-rgb),.28)}
-.fp-tema.si:after{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
-@media (min-width:480px){.fp-temas{justify-content:flex-start;gap:10px}.fp-tema{width:34px;height:34px}}
-.fp-tema[data-t=""]{background:linear-gradient(135deg,#0B0B0D 0 40%,#7A1232 40% 70%,#C07CFB 70%)}
-.fp-tema[data-t="animal"]{background-color:#D9A45A;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M14 18c6-6 16-4 18 4M10 30c2 6 10 9 16 5'/%3E%3Cpath d='M70 12c7-3 15 2 14 10M64 26c4 5 12 6 17 1'/%3E%3Cpath d='M40 60c5-7 16-6 19 2M36 72c4 6 13 8 19 3'/%3E%3Cpath d='M92 58c6-5 15-2 16 6M90 72c5 4 12 4 16-1'/%3E%3Cpath d='M16 92c6-5 15-3 17 5M14 104c4 5 12 6 17 1'/%3E%3Cpath d='M68 96c6-6 16-3 17 5M66 108c5 5 13 5 18 0'/%3E%3C/g%3E%3Cg fill='%23000' fill-opacity='.28'%3E%3Cellipse cx='21' cy='26' rx='7' ry='5'/%3E%3Cellipse cx='75' cy='19' rx='7' ry='5'/%3E%3Cellipse cx='47' cy='67' rx='8' ry='5'/%3E%3Cellipse cx='99' cy='65' rx='7' ry='5'/%3E%3Cellipse cx='23' cy='99' rx='7' ry='5'/%3E%3Cellipse cx='76' cy='103' rx='8' ry='5'/%3E%3Ccircle cx='52' cy='30' r='3'/%3E%3Ccircle cx='108' cy='30' r='2.5'/%3E%3Ccircle cx='8' cy='62' r='3'/%3E%3Ccircle cx='70' cy='78' r='2.5'/%3E%3Ccircle cx='45' cy='112' r='3'/%3E%3C/g%3E%3C/svg%3E");background-size:30px 30px}
-.fp-tema[data-t="minimal"]{background:linear-gradient(135deg,#FFFFFF 0 55%,#161616 55%)}
-.fp-tema[data-t="futurista"]{background:radial-gradient(circle at 30% 30%,#00E5FF,#2F80FF 45%,#050A14 75%)}
-.fp-tema[data-t="dark"]{background:linear-gradient(135deg,#000 0 55%,#3A3A3A 55% 75%,#EDEDED 75%)}
-.fp-tema[data-t="red"]{background:radial-gradient(circle at 35% 35%,#FF5A5A,#D90429 50%,#4A0606)}
-.fp-tema[data-t="moderno"]{background:linear-gradient(135deg,#0F172A 0 45%,#6366F1 45% 72%,#22D3EE 72%)}
-.fp-tema[data-t="pink"]{background:radial-gradient(circle at 35% 35%,#FFD1E8,#FF5FAE 45%,#E0217F)}
-.fp-tema[data-t="ltg"]{background:conic-gradient(#FF3B3B,#FF9F1C,#FFE600,#2BD58A,#2F80FF,#A956F7,#FF3B3B)}
-.fp-tema[data-t="fluor"]{background:radial-gradient(circle at 35% 35%,#F2FF7A,#B6FF00 40%,#39FF14 60%,#060708 85%)}
+.fp-sw[data-sw="neon"]{background:conic-gradient(#22e3d0,#4b6bff,#a855f7,#ff2d95,#bced1c,#22e3d0);box-shadow:0 0 10px rgba(168,85,247,.55)}
+/* ---------- Botón "Cambiar diseño" (encendido, como Mi EquiFinanciero) + ventana con carrusel ---------- */
+.fp-dis-boton-wrap{display:flex;justify-content:center;margin:0 0 16px}
+.fp-dis-boton{display:flex;flex-direction:column;align-items:center;background:none;border:0;padding:0;color:inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fp-dis-boton .ar{width:78px;height:78px;border-radius:50%;padding:3px;background:linear-gradient(135deg,var(--lila) 0%,var(--lila2) 55%,var(--lila-claro) 100%);box-shadow:0 6px 22px rgba(var(--lila2-rgb),.35);transition:transform .12s}
+.fp-dis-boton:active .ar{transform:scale(.93)}
+.fp-dis-boton .in{width:100%;height:100%;box-sizing:border-box;border-radius:50%;border:3px solid var(--negro);background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--lila-claro)}
+.fp-dis-boton .in svg{width:34px;height:34px}
+.fp-dis-boton .n{margin-top:8px;font-size:15px;font-weight:800;color:var(--crema)}
+.fp-dis-boton .cn{margin-top:1px;font-size:12.5px;font-weight:600;color:var(--gris)}
+.fp-op svg[stroke]{fill:none}
+/* ventana centrada */
+.fp-hoja-fondo.centro{align-items:center;padding:16px}
+.fp-hoja-fondo.centro .fp-hoja{position:relative;border-radius:24px;max-width:460px;max-height:90vh;padding:18px 14px 18px;animation:fpZoom .2s cubic-bezier(.2,.8,.2,1)}
+@keyframes fpZoom{from{transform:scale(.94);opacity:.3}}
+.fp-dis-cerrar{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(var(--crema-rgb),.1);color:var(--crema);font-size:24px;line-height:1;cursor:pointer}
+.fp-dis-tit{text-align:center;margin:4px 0 6px !important;padding:0 44px;font-size:21px !important;font-weight:800}
+.fp-dis-sub{text-align:center;margin:0 0 4px;font-size:14px;color:var(--gris)}
+.fp-dis-actual{text-align:center;font-size:14px;color:var(--gris);margin:6px 0 0}
+.fp-dis-actual b{color:var(--lila);font-size:16px}
+/* carrusel: 3 por vista, avanza de a grupos, lupa al tocar */
+.fp-dis-carr{position:relative;display:flex;gap:10px;overflow-x:auto;padding:24px 0 8px;contain:layout paint;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.fp-dis-carr::-webkit-scrollbar{display:none}
+.fp-dis-carr.mueve{scroll-snap-type:x mandatory}
+.fp-dis{flex:0 0 calc((100% - 20px) / 3);min-width:0;border:0;background:none;padding:0;cursor:pointer;text-align:center;color:inherit;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.fp-dis.g{scroll-snap-align:start;scroll-snap-stop:always}
+.fp-dis .ar{display:block;position:relative;width:84px;height:84px;margin:0 auto;border-radius:50%;padding:3px;background:rgba(var(--crema-rgb),.16);transform-origin:50% 100%;transition:transform .1s linear}
+.fp-dis .in{display:block;width:100%;height:100%;box-sizing:border-box;border-radius:50%;border:3px solid var(--panel)}
+.fp-dis.si .ar{background:linear-gradient(135deg,var(--lila),var(--lila2));box-shadow:0 0 16px rgba(var(--lila-rgb),.45)}
+.fp-dis.si .ar:after{content:"✓";position:absolute;right:-2px;bottom:2px;width:24px;height:24px;border-radius:50%;background:var(--lila);color:var(--sobre-lila);font-size:14px;font-weight:900;line-height:24px;box-shadow:0 0 0 3px var(--panel)}
+.fp-dis .n{display:block;margin-top:9px;font-size:14.5px;font-weight:700;color:var(--crema);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-dis.si .n{color:var(--lila)}
+/* ajustes del carrusel */
+.fp-dis-cfg{margin-top:14px;padding:14px;border-radius:16px;background:rgba(var(--crema-rgb),.05);border:1px solid var(--linea)}
+.fp-dis-sw{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.fp-dis-sw .tt{font-weight:700;font-size:15.5px}.fp-dis-sw .tt small{display:block;color:var(--gris);font-weight:600;font-size:12.5px;margin-top:2px}
+.fp-dis-sw button{flex:none;width:58px;height:32px;border-radius:999px;border:0;background:var(--sw-off);position:relative;cursor:pointer;transition:background .15s}
+.fp-dis-sw button:after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.fp-dis-sw button.on{background:var(--lila2)}.fp-dis-sw button.on:after{left:30px}
+.fp-dis-vel{margin-top:12px;transition:opacity .15s}.fp-dis-vel.off{opacity:.4}
+.fp-dis-vel input{width:100%;margin:8px 0 2px;accent-color:var(--lila2)}
+.fp-dis-vel .ex{display:flex;justify-content:space-between}
+/* Neón: botón, ventana y carrusel también en neón */
+html[data-tema="neon"] .fp-dis-boton .ar{background:var(--gn-arco);box-shadow:0 0 22px rgba(168,85,247,.55)}
+html[data-tema="neon"] .fp-dis-boton .in{background:#0d0d24;border-color:#05050e;color:#9dffdc;filter:drop-shadow(0 0 6px rgba(157,255,220,.6))}
+html[data-tema="neon"] .fp-dis-boton .n{color:#c9ffd8;text-shadow:0 0 10px rgba(157,255,220,.6);text-transform:uppercase;letter-spacing:.8px;font-size:13.5px}
+html[data-tema="neon"] .fp-hoja-fondo.centro .fp-hoja{background:linear-gradient(#111129,#08081c) padding-box,var(--gn-grad) border-box;border:2px solid transparent;box-shadow:0 0 34px rgba(168,85,247,.3),0 26px 60px rgba(0,0,0,.7)}
+html[data-tema="neon"] .fp-dis-tit{color:#9dffdc;text-shadow:0 0 12px rgba(157,255,220,.5)}
+html[data-tema="neon"] .fp-dis-cerrar{background:rgba(255,45,149,.16);color:#ff2d95;border:1px solid rgba(255,45,149,.45)}
+html[data-tema="neon"] .fp-dis.si .ar{background:var(--gn-arco);box-shadow:0 0 20px rgba(255,45,149,.5)}
+html[data-tema="neon"] .fp-dis.si .ar:after{background:#bced1c;color:#07030f}
+html[data-tema="neon"] .fp-dis-sw button.on{background:#bced1c;box-shadow:0 0 12px rgba(188,237,28,.6)}
+html[data-tema="neon"] .fp-dis-cfg{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.3)}
+/* muestras de cada diseño */
+.fp-sw{background-size:cover;background-position:center}
+.fp-sw[data-sw=""]{background:linear-gradient(135deg,#0B0B0D 0 40%,#7A1232 40% 70%,#C07CFB 70%)}
+.fp-sw[data-sw="animal"]{background-color:#D9A45A;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M14 18c6-6 16-4 18 4M10 30c2 6 10 9 16 5'/%3E%3Cpath d='M70 12c7-3 15 2 14 10M64 26c4 5 12 6 17 1'/%3E%3Cpath d='M40 60c5-7 16-6 19 2M36 72c4 6 13 8 19 3'/%3E%3Cpath d='M92 58c6-5 15-2 16 6M90 72c5 4 12 4 16-1'/%3E%3Cpath d='M16 92c6-5 15-3 17 5M14 104c4 5 12 6 17 1'/%3E%3Cpath d='M68 96c6-6 16-3 17 5M66 108c5 5 13 5 18 0'/%3E%3C/g%3E%3Cg fill='%23000' fill-opacity='.28'%3E%3Cellipse cx='21' cy='26' rx='7' ry='5'/%3E%3Cellipse cx='75' cy='19' rx='7' ry='5'/%3E%3Cellipse cx='47' cy='67' rx='8' ry='5'/%3E%3Cellipse cx='99' cy='65' rx='7' ry='5'/%3E%3Cellipse cx='23' cy='99' rx='7' ry='5'/%3E%3Cellipse cx='76' cy='103' rx='8' ry='5'/%3E%3Ccircle cx='52' cy='30' r='3'/%3E%3Ccircle cx='108' cy='30' r='2.5'/%3E%3Ccircle cx='8' cy='62' r='3'/%3E%3Ccircle cx='70' cy='78' r='2.5'/%3E%3Ccircle cx='45' cy='112' r='3'/%3E%3C/g%3E%3C/svg%3E");background-size:30px 30px}
+.fp-sw[data-sw="minimal"]{background:linear-gradient(135deg,#FFFFFF 0 55%,#161616 55%)}
+.fp-sw[data-sw="futurista"]{background:radial-gradient(circle at 30% 30%,#00E5FF,#2F80FF 45%,#050A14 75%)}
+.fp-sw[data-sw="dark"]{background:linear-gradient(135deg,#000 0 55%,#3A3A3A 55% 75%,#EDEDED 75%)}
+.fp-sw[data-sw="red"]{background:radial-gradient(circle at 35% 35%,#FF5A5A,#D90429 50%,#4A0606)}
+.fp-sw[data-sw="moderno"]{background:linear-gradient(135deg,#0F172A 0 45%,#6366F1 45% 72%,#22D3EE 72%)}
+.fp-sw[data-sw="pink"]{background:radial-gradient(circle at 35% 35%,#FFD1E8,#FF5FAE 45%,#E0217F)}
+.fp-sw[data-sw="ltg"]{background:conic-gradient(#FF3B3B,#FF9F1C,#FFE600,#2BD58A,#2F80FF,#A956F7,#FF3B3B)}
+.fp-sw[data-sw="fluor"]{background:radial-gradient(circle at 35% 35%,#F2FF7A,#B6FF00 40%,#39FF14 60%,#060708 85%)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -1386,7 +1429,7 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
   var API_URL = '';
   try { API_URL = (AND && AND.urlApi && AND.urlApi()) || ''; } catch (e) { }
   if (!API_URL) API_URL = meta('fp-api');
-  var VERSION_APP = '1.2.0 (diseños + neón)';
+  var VERSION_APP = '1.3.0 (botón de diseños)';
   var ROW_H = 64;
 
   /* =================================================================
@@ -1495,7 +1538,7 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
   /** Hoja que sube desde abajo */
   function hoja(html, o) {
     cerrarHoja(true);
-    var f = document.createElement('div'); f.className = 'fp-hoja-fondo';
+    var f = document.createElement('div'); f.className = 'fp-hoja-fondo' + (o && o.centro ? ' centro' : '');
     f.innerHTML = '<div class="fp-hoja" role="dialog" aria-modal="true">' + html + '</div>';
     document.body.appendChild(f);
     document.body.classList.add('con-hoja');
@@ -2340,34 +2383,183 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
     if (m) m.setAttribute('content', b[0]);
     try { if (AND && AND.colorBarras) AND.colorBarras(b[0], b[1], b[2]); } catch (e) { }
     try { if (AND && AND.temaSplash) AND.temaSplash(t); } catch (e) { }   // el splash de Android parte con este diseño
-    var bs = document.querySelectorAll('.fp-tema');
-    for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('si', bs[i].getAttribute('data-t') === t);
+    var bs = document.querySelectorAll('.fp-dis');
+    for (var i = 0; i < bs.length; i++) { var si = bs[i].getAttribute('data-t') === t; bs[i].classList.toggle('si', si); bs[i].setAttribute('aria-checked', si); }
     var n = $('fpTemaNom'); if (n) n.textContent = nombreTema(t);
+    var n2 = $('fpDisNom'); if (n2) n2.textContent = nombreTema(t);
   }
-  function temasHTML() {
+  var ICO_POWER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></svg>';
+  /** Botón de encendido (como el de Mi EquiFinanciero), centrado bajo el saludo */
+  function botonDisenoHTML() {
     var act = S.usuario ? temaValido(S.usuario.tema) : '';
-    return '<div class="fp-temas-cab">Diseño <b id="fpTemaNom">' + esc(nombreTema(act)) + '</b></div><div class="fp-temas" role="radiogroup" aria-label="Diseño de la app">' + TEMAS.map(function (x) {
-      return '<button class="fp-tema' + (x[0] === act ? ' si' : '') + '" data-a="tema" data-t="' + x[0] + '" role="radio" aria-checked="' + (x[0] === act) + '" aria-label="Diseño ' + esc(x[1]) + '" title="' + esc(x[1]) + '"></button>';
-    }).join('') + '</div>';
+    return '<div class="fp-dis-boton-wrap"><button class="fp-dis-boton" type="button" data-a="abrir-disenos" aria-label="Cambiar diseño de la app">' +
+      '<span class="ar"><span class="in">' + ICO_POWER + '</span></span><span class="n">Cambiar diseño</span><span class="cn" id="fpTemaNom">' + esc(nombreTema(act)) + '</span></button></div>';
+  }
+  /** Ajustes del carrusel de diseños (guardados en la cuenta) */
+  function temaCfg() {
+    var c = (S.usuario && S.usuario.temaCfg) || {};
+    return { auto: c.auto !== false, ms: Math.min(10000, Math.max(1000, Number(c.ms) || 3500)) };
   }
   var temaT = null;
   function guardarTemaServidor(ms) {
     if (!S.usuario) return;
-    Bodega.guardar('tema_pend', { id: S.usuario.id, tema: temaValido(S.usuario.tema) });
+    var ant = Bodega.leer('tema_pend');
+    Bodega.guardar('tema_pend', { id: S.usuario.id, tema: temaValido(S.usuario.tema), cfg: temaCfg(), n: ((ant && ant.n) || 0) + 1 });
     clearTimeout(temaT);
     if (!enLinea()) return;
     temaT = setTimeout(function () {
       var p = Bodega.leer('tema_pend'); if (!p || !S.usuario || p.id !== S.usuario.id) return;
-      api('api_guardarTema', S.token, p.tema).then(function () {
-        var q = Bodega.leer('tema_pend'); if (q && q.tema === p.tema) Bodega.borrar('tema_pend');
+      api('api_guardarTema', S.token, p.tema, p.cfg).then(function (r) {
+        var q = Bodega.leer('tema_pend');
+        if (!S.usuario || S.usuario.id !== p.id) return;
+        S.usuario.temaTs = Math.max(Number(S.usuario.temaTs) || 0, Number(r.temaTs) || 0);   // hora del servidor: lo más nuevo manda
+        if (q && q.n === p.n) Bodega.borrar('tema_pend');
+        guardarSesion();
       }).catch(function () { });
-    }, ms === undefined ? 700 : ms);
+    }, ms === undefined ? 600 : ms);
   }
   function temaPendiente() { var p = Bodega.leer('tema_pend'); return !!(p && S.usuario && p.id === S.usuario.id); }
 
+  /* ---------- Ventana "Cambiar diseño": carrusel manual + automático con lupa (igual que Mi EquiFinanciero) ---------- */
+  var DIS = { cen: [], ar: [], w: 0, paso: 0, pag: 0, toco: false, dedo: 0, izq: 0, raf: 0, esc: false, timer: 0, ms: 0, dir: 1, anim: false, animRaf: 0, pausa: 0, mover: false, el: null };
+  function abrirDisenos() {
+    if (!S.usuario) { toast('Ingresa a tu cuenta para cambiar el diseño 🎨', false, { texto: 'Ingresar', fn: function () { hojaIngresar(); } }); return; }
+    var act = temaValido(S.usuario.tema), c = temaCfg();
+    var items = TEMAS.map(function (x, i) {
+      var si = x[0] === act;
+      return '<button type="button" class="fp-dis' + (i % 3 === 0 ? ' g' : '') + (si ? ' si' : '') + '" data-t="' + x[0] + '" role="radio" aria-checked="' + si + '" aria-label="Diseño ' + esc(x[1]) + '">' +
+        '<span class="ar"><span class="in fp-sw" data-sw="' + x[0] + '"></span></span><span class="n">' + esc(x[1]) + '</span></button>';
+    }).join('');
+    var cfgHTML = S.usuario ? '<div class="fp-dis-cfg"><div class="fp-dis-sw"><div class="tt">Movimiento automático<small>El carrusel de diseños avanza solo</small></div>' +
+      '<button type="button" id="fpDisAuto" class="' + (c.auto ? 'on' : '') + '" role="switch" aria-checked="' + c.auto + '" aria-label="Movimiento automático del carrusel de diseños"></button></div>' +
+      '<div class="fp-dis-vel' + (c.auto ? '' : ' off') + '" id="fpDisVel"><div class="mini">Cambia cada <b id="fpDisTxt">' + disSeg(c.ms) + '</b></div>' +
+      '<input type="range" id="fpDisRng" min="1" max="10" step="0.5" value="' + (c.ms / 1000) + '"' + (c.auto ? '' : ' disabled') + ' aria-label="Velocidad del carrusel de diseños">' +
+      '<div class="mini ex"><span>Rápido</span><span>Lento</span></div></div></div>' : '';
+    var caja = hoja('<button type="button" class="fp-dis-cerrar" aria-label="Cerrar">×</button>' +
+      '<h3 class="fp-dis-tit">Cambiar diseño</h3><p class="fp-dis-sub">Toca un círculo y <b>toda la app</b> cambia al instante.</p>' +
+      '<div class="fp-dis-actual">Diseño actual: <b id="fpDisNom">' + esc(nombreTema(act)) + '</b></div>' +
+      '<div class="fp-dis-carr mueve" id="fpDisCarr" role="radiogroup" aria-label="Diseños">' + items + '</div>' + cfgHTML,
+      { centro: true, alCerrar: disParar });
+    var el = DIS.el = caja.querySelector('#fpDisCarr');
+    caja.querySelector('.fp-dis-cerrar').onclick = function () { cerrarHoja(); };
+    // tocar un diseño = se aplica al tiro en toda la app
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('.fp-dis'); if (!b || !S.usuario) return;
+      var t = temaValido(b.getAttribute('data-t'));
+      DIS.pausa = Date.now() + 6000;
+      if (t === temaValido(S.usuario.tema)) return;
+      aplicarTema(t);
+      S.usuario.tema = t; guardarSesion();
+      guardarTemaServidor();
+      try { if (AND && AND.vibrar) AND.vibrar(12); } catch (er) { }
+    });
+    var mov = function (e) { var t = e.touches && e.touches[0]; if (!t) return; DIS.dedo = t.clientX - DIS.izq; disPedir(); };
+    var fin = function () { DIS.toco = false; DIS.pausa = Date.now() + 6000; disPedir(); };   // tras tocarlo, espera 6 s antes de moverse solo
+    el.addEventListener('touchstart', function (e) { if (DIS.anim) disFinAnim(); DIS.toco = true; DIS.izq = el.getBoundingClientRect().left; disMedir(); mov(e); }, { passive: true });
+    el.addEventListener('touchmove', mov, { passive: true });
+    el.addEventListener('touchend', fin, { passive: true });
+    el.addEventListener('touchcancel', fin, { passive: true });
+    el.addEventListener('scroll', disPedir, { passive: true });
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') DIS.pausa = Date.now() + 6000; });
+    // ajustes (solo con sesión)
+    var bA = caja.querySelector('#fpDisAuto'), rg = caja.querySelector('#fpDisRng');
+    if (bA) {
+      bA.onclick = function () {
+        var cf = temaCfg(); cf.auto = !cf.auto;
+        S.usuario.temaCfg = cf; guardarSesion(); guardarTemaServidor();
+        bA.classList.toggle('on', cf.auto); bA.setAttribute('aria-checked', cf.auto);
+        $('fpDisVel').classList.toggle('off', !cf.auto); rg.disabled = !cf.auto;
+        disAuto(true);
+      };
+      rg.oninput = function () { $('fpDisTxt').textContent = disSeg(Number(rg.value) * 1000); };
+      rg.onchange = function () {
+        var cf = temaCfg(); cf.ms = Math.round(Number(rg.value) * 1000);
+        S.usuario.temaCfg = cf; guardarSesion(); guardarTemaServidor();
+        disAuto(true);
+      };
+    }
+    // deja a la vista el grupo del diseño elegido y arranca
+    requestAnimationFrame(function () {
+      disMedir();
+      var k = 0; for (var i = 0; i < TEMAS.length; i++) if (TEMAS[i][0] === act) k = i;
+      el.scrollLeft = Math.min(el.scrollWidth - el.clientWidth, Math.floor(k / 3) * (DIS.pag || el.clientWidth));
+      disAuto(true);
+    });
+  }
+  function disSeg(ms) { return String(ms / 1000).replace('.', ',') + ' s'; }
+  function disAbierto() { return !!(DIS.el && DIS.el.isConnected); }
+  function disMedir() {
+    var el = DIS.el; if (!el) return;
+    var n = el.children, i; DIS.cen = []; DIS.ar = [];
+    for (i = 0; i < n.length; i++) { DIS.cen.push(n[i].offsetLeft + n[i].offsetWidth / 2); DIS.ar.push(n[i].firstChild); }
+    DIS.w = el.clientWidth; DIS.paso = n.length > 1 ? DIS.cen[1] - DIS.cen[0] : DIS.w / 3;
+    DIS.pag = n.length > 3 ? DIS.cen[3] - DIS.cen[0] : DIS.w;
+  }
+  function disPedir() { if (!DIS.raf) DIS.raf = requestAnimationFrame(disLupa); }
+  /* Efecto lupa: el círculo bajo el dedo (o al centro si se mueve solo) crece un poco. Solo transform: liviano en gama baja. */
+  function disLupa() {
+    DIS.raf = 0; var el = DIS.el, i; if (!el || !el.isConnected) return;
+    var foco = DIS.toco ? DIS.dedo : (DIS.mover ? DIS.w / 2 : null);
+    if (foco === null) { if (DIS.esc) { for (i = 0; i < DIS.ar.length; i++) DIS.ar[i].style.transform = ''; DIS.esc = false; } return; }
+    if (!DIS.cen.length || DIS.cen.length !== el.children.length) disMedir();
+    var sl = el.scrollLeft, R = DIS.paso || 1;
+    for (i = 0; i < DIS.ar.length; i++) {
+      var t = Math.min(1, Math.abs(DIS.cen[i] - sl - foco) / R);
+      DIS.ar[i].style.transform = 'scale(' + (1 + 0.22 * (1 + Math.cos(Math.PI * t)) / 2).toFixed(3) + ')';
+    }
+    DIS.esc = true;
+  }
+  function disParar() {
+    if (DIS.timer) { clearInterval(DIS.timer); DIS.timer = 0; }
+    disFinAnim(); DIS.mover = false; DIS.dir = 1; DIS.pausa = 0;
+  }
+  function disAuto(reiniciar) {
+    var el = DIS.el;
+    if (!disAbierto()) { disParar(); return; }
+    if (reiniciar && DIS.timer) { clearInterval(DIS.timer); DIS.timer = 0; }
+    disMedir();
+    var c = temaCfg();
+    var quieto = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || !c.auto;
+    DIS.mover = !quieto && el.scrollWidth > el.clientWidth + 2;
+    disPedir();
+    if (DIS.timer && (DIS.ms !== c.ms || !DIS.mover)) { clearInterval(DIS.timer); DIS.timer = 0; }
+    if (DIS.mover && !DIS.timer) { DIS.ms = c.ms; DIS.timer = setInterval(disSiguiente, c.ms); }
+  }
+  // Avanza grupo por grupo; al llegar al último vuelve hacia el primero (ida y vuelta)
+  function disSiguiente() {
+    var el = DIS.el;
+    if (!disAbierto()) { disParar(); return; }
+    if (!DIS.mover || document.hidden || DIS.toco || DIS.anim || Date.now() < DIS.pausa) return;
+    var max = el.scrollWidth - el.clientWidth, pag = DIS.pag || el.clientWidth;
+    if (max <= 2 || pag <= 0) return;
+    var ult = Math.max(1, Math.ceil((max - 4) / pag));
+    var p = el.scrollLeft >= max - 3 ? ult : Math.round(el.scrollLeft / pag);
+    if (p >= ult) DIS.dir = -1; else if (p <= 0) DIS.dir = 1;
+    var q = Math.max(0, Math.min(ult, p + DIS.dir));
+    disIr(Math.min(max, q * pag));
+  }
+  function disIr(x) {
+    var el = DIS.el, x0 = el.scrollLeft, d = x - x0, dur = Math.min(750, temaCfg().ms * 0.5), t0 = 0;
+    if (Math.abs(d) < 2) return;
+    DIS.anim = true; el.style.scrollSnapType = 'none';
+    var paso = function (t) {
+      if (!DIS.anim) return;
+      if (!t0) t0 = t;
+      var k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      el.scrollLeft = x0 + d * e;
+      if (k < 1) DIS.animRaf = requestAnimationFrame(paso); else disFinAnim();
+    };
+    DIS.animRaf = requestAnimationFrame(paso);
+  }
+  function disFinAnim() {
+    if (DIS.animRaf) { cancelAnimationFrame(DIS.animRaf); DIS.animRaf = 0; }
+    DIS.anim = false;
+    if (DIS.el) DIS.el.style.scrollSnapType = '';
+  }
+
   function vInicio() {
     var h = '<div class="titulo">' + saludo() + (primerNombre() ? ', ' + esc(primerNombre()) : '') + '</div>';
-    h += temasHTML();
+    h += botonDisenoHTML();
     h += avisosHTML();
     if (!S.pistas.length) { $('vista').innerHTML = h + sinMusicaHTML() + (S.usuario ? '' : ctaCuentaHTML()); return; }
     // accesos rápidos
@@ -2610,6 +2802,7 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
     h += '<div class="lista-ops">' +
       (S.esAdmin ? '<button class="fp-op" data-a="ir" data-v="admin">' + ic('ajustes') + 'Panel de administrador<em id="fpBadgeAdmin"></em></button>' : '') +
       (AND ? '<button class="fp-op" data-a="hoja-ecualizador">' + ic('ecu') + 'Ecualizador</button>' : '') +
+      (S.usuario ? '<button class="fp-op" data-a="abrir-disenos">' + ICO_POWER + 'Diseño de la app<em>' + esc(nombreTema(temaValido(S.usuario.tema))) + '</em></button>' : '') +
       '<button class="fp-op" data-a="hoja-temporizador">' + ic('reloj') + 'Temporizador para dormir<em>' + textoTempo() + '</em></button>' +
       (AND ? '<button class="fp-op" data-a="reescanear">' + ic('refrescar') + 'Buscar música nueva<em>' + canciones(S.pistas.length) + '</em></button>' : '') +
       (S.usuario ? '<button class="fp-op" data-a="sincronizar-ya">' + ic('nube') + 'Sincronizar ahora</button>' : '') +
@@ -2713,7 +2906,8 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
   function actualizarUsuario(u) {
     if (!u || !S.usuario || u.id !== S.usuario.id) return;
     var eraVerif = S.usuario.verificado;
-    if (temaPendiente()) u.tema = S.usuario.tema;           // un cambio aún no enviado manda
+    // Diseño: un cambio sin enviar o más nuevo (hora del servidor) manda; una respuesta vieja NO lo pisa
+    if (temaPendiente() || (Number(u.temaTs) || 0) < (Number(S.usuario.temaTs) || 0)) { u.tema = S.usuario.tema; u.temaTs = S.usuario.temaTs; u.temaCfg = S.usuario.temaCfg; }
     else if (temaValido(u.tema) !== temaValido(S.usuario.tema)) aplicarTema(u.tema);   // lo cambió en otro teléfono
     S.usuario = u; guardarSesion(); pintarAvatar();
     if (!eraVerif && u.verificado) cuentaVerificada();
@@ -2873,7 +3067,10 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
   }
   setInterval(tick, 500);
   setInterval(function () { if (actual() && S.sonando) guardarColaLuego(); }, 15000);
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) { tick(); if (enLinea()) programarSync(800); } });
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) { aplicarTema(S.usuario ? S.usuario.tema : ''); tick(); if (enLinea()) programarSync(800); }
+    else if (temaPendiente()) guardarTemaServidor(0);   // al minimizar, el cambio de diseño se envía de inmediato
+  });
 
   /* =================================================================
    *  HOJAS: menú de canción, agregar a lista, cola, ecualizador, temporizador
@@ -3208,14 +3405,7 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
     'web-archivos': function () { var i = $('fpArchivosMusica'); i.value = ''; i.click(); },
     'web-carpeta': function () { var i = $('fpCarpetaMusica'); i.value = ''; i.click(); },
     'hoja-ingresar': function () { hojaIngresar(); },
-    'tema': function (el) {
-      var t = temaValido(el.getAttribute('data-t'));
-      if (!S.usuario) { toast('Ingresa a tu cuenta para cambiar el diseño 🎨', false, { texto: 'Ingresar', fn: function () { hojaIngresar(); } }); return; }
-      if (t === temaValido(S.usuario.tema)) return;
-      aplicarTema(t);                         // al instante
-      S.usuario.tema = t; guardarSesion();     // en el teléfono
-      guardarTemaServidor();                   // en la cuenta (si no hay internet, se envía al volver)
-    },
+    'abrir-disenos': function () { abrirDisenos(); },
     'tab-ingreso': function (el) { tabIngreso = el.dataset.t; hojaIngresar(); },
     'google-android': function () { loginGoogleAndroid(); },
     'google-pronto': function () { toast('El ingreso con Google se habilita pronto. Usa tu correo.'); },
