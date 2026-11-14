@@ -1,5 +1,5 @@
 /* Fineplay PWA — abre sin internet. Cambia la versión al subir cambios. */
-const VERSION = 'fineplay-v5';
+const VERSION = 'fineplay-v7';
 const LED = 'fineplay-led';   // publicidad de la LED: no se borra al cambiar de versión
 const BASE = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './privacidad.html'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE)).then(() => self.skipWaiting())); });
@@ -29,7 +29,9 @@ self.addEventListener('fetch', e => {
   if (r.method !== 'GET' || u.hostname.endsWith('google.com') || u.hostname.endsWith('googleusercontent.com') && u.pathname.includes('macros')) return;
   if (r.mode === 'navigate' || u.origin === location.origin) {
     // la página: primero internet (siempre la última), si no hay, la guardada
-    e.respondWith(fetch(r).then(res => { const c = res.clone(); caches.open(VERSION).then(x => x.put(r, c)); return res; })
+    // cache:'no-cache' = siempre pregunta a GitHub si hay versión nueva (no usa la copia vieja del navegador)
+    const pedir = r.mode === 'navigate' ? fetch(r.url, { cache: 'no-cache', credentials: 'same-origin' }) : fetch(r, { cache: 'no-cache' });
+    e.respondWith(pedir.then(res => { if (res.ok) { const c = res.clone(); caches.open(VERSION).then(x => x.put(r, c)); } return res; })
       .catch(() => caches.match(r).then(x => x || caches.match('./index.html'))));
     return;
   }
