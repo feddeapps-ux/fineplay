@@ -1,5 +1,5 @@
 /* Fineplay PWA — abre sin internet. Cambia la versión al subir cambios. */
-const VERSION = 'fineplay-v8';
+const VERSION = 'fineplay-v9';
 const LED = 'fineplay-led';   // publicidad de la LED: no se borra al cambiar de versión
 const BASE = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './privacidad.html'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE)).then(() => self.skipWaiting())); });

@@ -544,14 +544,13 @@ html[data-tema="neon"] .fp-fila .t.on,html[data-tema="neon"] .fp-fila.on .t{colo
 html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid rgba(168,85,247,.5);box-shadow:0 0 18px rgba(168,85,247,.35)}
 .fp-sw[data-sw="neon"]{background:conic-gradient(#22e3d0,#4b6bff,#a855f7,#ff2d95,#bced1c,#22e3d0);box-shadow:0 0 10px rgba(168,85,247,.55)}
 /* ---------- Botón "Cambiar diseño" (encendido, como Mi EquiFinanciero) + ventana con carrusel ---------- */
-.fp-dis-boton-wrap{display:flex;justify-content:center;margin:0 0 16px}
-.fp-dis-boton{display:flex;flex-direction:column;align-items:center;background:none;border:0;padding:0;color:inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.fp-dis-boton .ar{width:78px;height:78px;border-radius:50%;padding:3px;background:linear-gradient(135deg,var(--lila) 0%,var(--lila2) 55%,var(--lila-claro) 100%);box-shadow:0 6px 22px rgba(var(--lila2-rgb),.35);transition:transform .12s}
-.fp-dis-boton:active .ar{transform:scale(.93)}
-.fp-dis-boton .in{width:100%;height:100%;box-sizing:border-box;border-radius:50%;border:3px solid var(--negro);background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--lila-claro)}
-.fp-dis-boton .in svg{width:34px;height:34px}
-.fp-dis-boton .n{margin-top:8px;font-size:15px;font-weight:800;color:var(--crema)}
-.fp-dis-boton .cn{margin-top:1px;font-size:12.5px;font-weight:600;color:var(--gris)}
+.fp-saludo{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:6px 0 14px}
+.fp-saludo .titulo{margin:0;min-width:0}
+.fp-dis-boton{flex:none;margin-right:4px;background:none;border:0;padding:0;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fp-dis-boton .ar{display:block;width:40px;height:40px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--lila) 0%,var(--lila2) 55%,var(--lila-claro) 100%);box-shadow:0 3px 12px rgba(var(--lila2-rgb),.35);transition:transform .12s}
+.fp-dis-boton:active .ar{transform:scale(.9)}
+.fp-dis-boton .in{width:100%;height:100%;box-sizing:border-box;border-radius:50%;border:2px solid var(--negro);background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--lila-claro)}
+.fp-dis-boton .in svg{width:19px;height:19px}
 .fp-op svg[stroke]{fill:none}
 /* ventana centrada */
 .fp-hoja-fondo.centro{align-items:center;padding:16px}
@@ -585,9 +584,8 @@ html[data-tema="neon"] .toast{background:#14143a;color:#ecebff;border:1px solid 
 .fp-dis-vel input{width:100%;margin:8px 0 2px;accent-color:var(--lila2)}
 .fp-dis-vel .ex{display:flex;justify-content:space-between}
 /* Neón: botón, ventana y carrusel también en neón */
-html[data-tema="neon"] .fp-dis-boton .ar{background:var(--gn-arco);box-shadow:0 0 22px rgba(168,85,247,.55)}
+html[data-tema="neon"] .fp-dis-boton .ar{background:var(--gn-arco);box-shadow:0 0 14px rgba(168,85,247,.55)}
 html[data-tema="neon"] .fp-dis-boton .in{background:#0d0d24;border-color:#05050e;color:#9dffdc;filter:drop-shadow(0 0 6px rgba(157,255,220,.6))}
-html[data-tema="neon"] .fp-dis-boton .n{color:#c9ffd8;text-shadow:0 0 10px rgba(157,255,220,.6);text-transform:uppercase;letter-spacing:.8px;font-size:13.5px}
 html[data-tema="neon"] .fp-hoja-fondo.centro .fp-hoja{background:linear-gradient(#111129,#08081c) padding-box,var(--gn-grad) border-box;border:2px solid transparent;box-shadow:0 0 34px rgba(168,85,247,.3),0 26px 60px rgba(0,0,0,.7)}
 html[data-tema="neon"] .fp-dis-tit{color:#9dffdc;text-shadow:0 0 12px rgba(157,255,220,.5)}
 html[data-tema="neon"] .fp-dis-cerrar{background:rgba(255,45,149,.16);color:#ff2d95;border:1px solid rgba(255,45,149,.45)}
@@ -1429,7 +1427,7 @@ html[data-tema="neon"] .fp-dis-cfg{background:rgba(168,85,247,.08);border-color:
   var API_URL = '';
   try { API_URL = (AND && AND.urlApi && AND.urlApi()) || ''; } catch (e) { }
   if (!API_URL) API_URL = meta('fp-api');
-  var VERSION_APP = '1.3.0 (botón de diseños)';
+  var VERSION_APP = '1.3.1 (botón junto al saludo)';
   var ROW_H = 64;
 
   /* =================================================================
@@ -2390,10 +2388,11 @@ html[data-tema="neon"] .fp-dis-cfg{background:rgba(168,85,247,.08);border-color:
   }
   var ICO_POWER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></svg>';
   /** Botón de encendido (como el de Mi EquiFinanciero), centrado bajo el saludo */
+  /* Botón pequeño a la derecha del saludo. Solo con sesión iniciada. */
   function botonDisenoHTML() {
-    var act = S.usuario ? temaValido(S.usuario.tema) : '';
-    return '<div class="fp-dis-boton-wrap"><button class="fp-dis-boton" type="button" data-a="abrir-disenos" aria-label="Cambiar diseño de la app">' +
-      '<span class="ar"><span class="in">' + ICO_POWER + '</span></span><span class="n">Cambiar diseño</span><span class="cn" id="fpTemaNom">' + esc(nombreTema(act)) + '</span></button></div>';
+    if (!S.usuario) return '';
+    return '<button class="fp-dis-boton" type="button" data-a="abrir-disenos" aria-label="Cambiar diseño de la app (actual: ' + esc(nombreTema(temaValido(S.usuario.tema))) + ')" title="Cambiar diseño">' +
+      '<span class="ar"><span class="in">' + ICO_POWER + '</span></span></button>';
   }
   /** Ajustes del carrusel de diseños (guardados en la cuenta) */
   function temaCfg() {
@@ -2558,8 +2557,7 @@ html[data-tema="neon"] .fp-dis-cfg{background:rgba(168,85,247,.08);border-color:
   }
 
   function vInicio() {
-    var h = '<div class="titulo">' + saludo() + (primerNombre() ? ', ' + esc(primerNombre()) : '') + '</div>';
-    h += botonDisenoHTML();
+    var h = '<div class="fp-saludo"><div class="titulo">' + saludo() + (primerNombre() ? ', ' + esc(primerNombre()) : '') + '</div>' + botonDisenoHTML() + '</div>';
     h += avisosHTML();
     if (!S.pistas.length) { $('vista').innerHTML = h + sinMusicaHTML() + (S.usuario ? '' : ctaCuentaHTML()); return; }
     // accesos rápidos
